@@ -22,7 +22,7 @@ public class MakeSite {
     public static void main(String[] args){
         //strings
         String mainFolder, websiteName, indexName, imgFolderName, jsFolderName, scriptFileName,
-                jqueryFileName, cssFolderName, styleSheetName, htmlFormat, scriptFormat;
+                jqueryFileName, cssFolderName, styleSheetName, htmlFormat, scriptFormat, cssFormat;
         mainFolder = "";
         indexName = "index.html";
         jsFolderName = "js";
@@ -44,7 +44,8 @@ public class MakeSite {
         }
 
         //htmlFormat which will be inserted into index.html
-        htmlFormat =  "<!DOCTYPE html>\n" +
+        htmlFormat =  "<!--\nAuthor: Patrick Furbert\nDate:\n-->" +
+                      "<!DOCTYPE html>\n" +
                       "<html>\n\n" +
                       "\t<head>\n" +
                       "\t\t<title>" + websiteName + "</title>\n"+
@@ -57,9 +58,15 @@ public class MakeSite {
                       "</html>";
 
         //scriptFormat which will be inserted into the script.js(uses jQuery)
-        scriptFormat = "$(document).ready(function(){\n\n//insert jQuery stuff here...\n\n" +
+        scriptFormat = "//Author: Patrick Furbert\n" +
+                "//Date: \n\n" +
+                "$(document).ready(function(){\n\n//insert jQuery stuff here...\n\n" +
 
                 "\t});";
+
+        //cssFormat which will be inserted into style.css(just author information
+        cssFormat = "/**\nAuthor: Patrick Furbert\n" +
+                "Date: \n**/";
 
         try {
 
@@ -113,9 +120,10 @@ public class MakeSite {
                 //create the jQuery.js file
                 jQF.createNewFile();
 
-                //Write the html to the index.html file and the jQuery to the scripts.js file
+                //Write the html to the index.html file, the jQuery to the scripts.js file, and the author info to css file
                 Files.write(index.toPath(), htmlFormat.getBytes());
                 Files.write(script.toPath(), scriptFormat.getBytes());
+                Files.write(style.toPath(), cssFormat.getBytes());
 
 
                 //open the files in sublime text
@@ -148,9 +156,10 @@ public class MakeSite {
                     //create the jQuery.js file
                     jQF.createNewFile();
 
-                    //Write the html to the index.html file and the jQuery to the scripts.js file
+                    //Write the html to the index.html file, the jQuery to the scripts.js file, and the author info to css file
                     Files.write(index.toPath(), htmlFormat.getBytes());
                     Files.write(script.toPath(), scriptFormat.getBytes());
+                    Files.write(style.toPath(), cssFormat.getBytes());
 
 
                     //open the files in sublime text
