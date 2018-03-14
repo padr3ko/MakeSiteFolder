@@ -16,6 +16,7 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 
 public class MakeSite {
     public static void main(String[] args){
@@ -123,36 +124,42 @@ public class MakeSite {
                         script.getAbsolutePath() + "\" \"" +
                         style.getAbsolutePath() + "\"");
 
-            }else if(websiteFolder.isDirectory() && websiteFolder.list().length == 0) {
+            }else if(websiteFolder.isDirectory() && websiteFolder.list().length == 2) {
+
+                //check if the list contains .git and README.MD
+                String[] folderContents = websiteFolder.list();
+
+                //when you clone a repositor the two files you get are .git and README.md so
+                //if they are the folder contents it is ok to create for my purposes
+                if(Arrays.asList(folderContents).contains(".git") && Arrays.asList(folderContents).contains("README.md")) {
+
+                    //create the remaining files/folders
+                    imgF.mkdir();
+                    jsF.mkdir();
+                    csF.mkdir();
+                    index.createNewFile();
+                    script.createNewFile();
+                    style.createNewFile();
+
+                    //copy the included jQueryFile into the jQF file object
+                    OutputStream outputStream = new FileOutputStream(jQF);
+                    outputStream.write(buffer);
+
+                    //create the jQuery.js file
+                    jQF.createNewFile();
+
+                    //Write the html to the index.html file and the jQuery to the scripts.js file
+                    Files.write(index.toPath(), htmlFormat.getBytes());
+                    Files.write(script.toPath(), scriptFormat.getBytes());
 
 
-                //create the remaining files/folders
-                imgF.mkdir();
-                jsF.mkdir();
-                csF.mkdir();
-                index.createNewFile();
-                script.createNewFile();
-                style.createNewFile();
+                    //open the files in sublime text
+                    Process child = Runtime.getRuntime().exec("sublime_text.exe \"" +
+                            index.getAbsolutePath() + "\" \"" +
+                            script.getAbsolutePath() + "\" \"" +
+                            style.getAbsolutePath() + "\"");
 
-                //copy the included jQueryFile into the jQF file object
-                OutputStream outputStream = new FileOutputStream(jQF);
-                outputStream.write(buffer);
-
-                //create the jQuery.js file
-                jQF.createNewFile();
-
-                //Write the html to the index.html file and the jQuery to the scripts.js file
-                Files.write(index.toPath(), htmlFormat.getBytes());
-                Files.write(script.toPath(), scriptFormat.getBytes());
-
-
-                //open the files in sublime text
-                Process child = Runtime.getRuntime().exec("sublime_text.exe \"" +
-                        index.getAbsolutePath() + "\" \"" +
-                        script.getAbsolutePath() + "\" \"" +
-                        style.getAbsolutePath() + "\"");
-
-
+                }
             }//end if-else statement
 
 
