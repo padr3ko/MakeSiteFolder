@@ -44,7 +44,7 @@ public class MakeSite {
         }
 
         //htmlFormat which will be inserted into index.html
-        htmlFormat =  "<!--\nAuthor: Patrick Furbert\nDate:\n-->" +
+        htmlFormat =  "<!--\nAuthor: Patrick Furbert\nDate:\n-->\n\n" +
                       "<!DOCTYPE html>\n" +
                       "<html>\n\n" +
                       "\t<head>\n" +
