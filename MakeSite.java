@@ -95,8 +95,36 @@ public class MakeSite {
 
 
             //first create the baseFolder if it doesn't exist already
-            if(!websiteFolder.exists()) {
+            if(!websiteFolder.isDirectory()) {
                 websiteFolder.mkdir();
+                //create the remaining files/folders
+                imgF.mkdir();
+                jsF.mkdir();
+                csF.mkdir();
+                index.createNewFile();
+                script.createNewFile();
+                style.createNewFile();
+
+                //copy the included jQueryFile into the jQF file object
+                OutputStream outputStream = new FileOutputStream(jQF);
+                outputStream.write(buffer);
+
+                //create the jQuery.js file
+                jQF.createNewFile();
+
+                //Write the html to the index.html file and the jQuery to the scripts.js file
+                Files.write(index.toPath(), htmlFormat.getBytes());
+                Files.write(script.toPath(), scriptFormat.getBytes());
+
+
+                //open the files in sublime text
+                Process child = Runtime.getRuntime().exec("sublime_text.exe \"" +
+                        index.getAbsolutePath() + "\" \"" +
+                        script.getAbsolutePath() + "\" \"" +
+                        style.getAbsolutePath() + "\"");
+
+            }else if(websiteFolder.isDirectory() && websiteFolder.list().length == 0) {
+
 
                 //create the remaining files/folders
                 imgF.mkdir();
@@ -118,17 +146,14 @@ public class MakeSite {
                 Files.write(script.toPath(), scriptFormat.getBytes());
 
 
-
                 //open the files in sublime text
-               Process child = Runtime.getRuntime().exec("sublime_text.exe \"" +
-                                                            index.getAbsolutePath() + "\" \"" +
-                                                            script.getAbsolutePath() + "\" \"" +
-                                                            style.getAbsolutePath()+"\"");
+                Process child = Runtime.getRuntime().exec("sublime_text.exe \"" +
+                        index.getAbsolutePath() + "\" \"" +
+                        script.getAbsolutePath() + "\" \"" +
+                        style.getAbsolutePath() + "\"");
 
 
-
-
-            }//end if statement
+            }//end if-else statement
 
 
         }catch(Exception ex){
