@@ -49,9 +49,9 @@ public class MakeSite {
                       "<html>\n\n" +
                       "\t<head>\n" +
                       "\t\t<title>" + websiteName + "</title>\n"+
-                      "\t\t<link rel=\"stylesheet\" type=\"text/css\" href=\"css/" + styleSheetName + "\">\n" +
-                      "\t\t<script type=\"text/javascript\" src=\"js/" + scriptFileName +"\"></script>\n"+
                       "\t\t<script type=\"text/javascript\" src=\"js/" + jqueryFileName +"\"></script>\n"+
+                      "\t\t<script type=\"text/javascript\" src=\"js/" + scriptFileName +"\"></script>\n"+
+                      "\t\t<link rel=\"stylesheet\" type=\"text/css\" href=\"css/" + styleSheetName + "\">\n" +
                       "\t</head>\n\n" +
                       "\t<body>\n\n" +
                       "\t</body>\n" +
@@ -77,9 +77,8 @@ public class MakeSite {
             //to get the size. Read the buffer?(not sure if this is requierd
             //Then write the file via outputstream with the new FileOutPutStream
             //constructor and the file object as an argument
-            InputStream inputStream = MakeSite.class.getResourceAsStream("res/" + jqueryFileName);
-            byte[] buffer = new byte[inputStream.available()];
-            inputStream.read(buffer);
+            InputStream inputStream = MakeSite.class.getResourceAsStream("/res/" + jqueryFileName);
+            byte[] buffer = new byte[8192];
 
             //website folder structure will be created where the script is located
             //Files and folders for website
@@ -115,10 +114,20 @@ public class MakeSite {
 
                 //copy the included jQueryFile into the jQF file object
                 OutputStream outputStream = new FileOutputStream(jQF);
-                outputStream.write(buffer);
+
+                //input stream reads a certain amount of bytes from the file
+                //and stores it in the buffer array(length of n)
+                //output stream writers the length from the buffer array to the
+                //file via fileoutput stream
+                int n;
+                while ((n = inputStream.read(buffer)) > 0) {
+                    outputStream.write(buffer, 0, n);
+                }
 
                 //create the jQuery.js file
                 jQF.createNewFile();
+                outputStream.close();
+
 
                 //Write the html to the index.html file, the jQuery to the scripts.js file, and the author info to css file
                 Files.write(index.toPath(), htmlFormat.getBytes());
@@ -151,10 +160,15 @@ public class MakeSite {
 
                     //copy the included jQueryFile into the jQF file object
                     OutputStream outputStream = new FileOutputStream(jQF);
-                    outputStream.write(buffer);
+
+                    int n;
+                    while ((n = inputStream.read(buffer)) > 0) {
+                        outputStream.write(buffer, 0, n);
+                    }
 
                     //create the jQuery.js file
                     jQF.createNewFile();
+                    outputStream.close();
 
                     //Write the html to the index.html file, the jQuery to the scripts.js file, and the author info to css file
                     Files.write(index.toPath(), htmlFormat.getBytes());
@@ -171,6 +185,7 @@ public class MakeSite {
                 }
             }//end if-else statement
 
+        inputStream.close();
 
         }catch(Exception ex){
             ex.printStackTrace();
